@@ -1056,3 +1056,7 @@ jQuery(document).ready(function($) {
             });
     }
 });
+
+function ($) {
+	$(document).anchor()
+	}(jQuery);
