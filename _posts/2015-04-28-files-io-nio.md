@@ -8,36 +8,35 @@ tags : [java, core, files, io, nio]
 header-img: "img/post-bg-03.jpg"
 ---
 
-Since Java 7 a bit dusty I/O becomes a burden and new package `java.nio.file` has been introduced in the language. 
+Since Java 7 a bit dusty `I/O` becomes a burden and new package `java.nio.file` has been introduced in the language. 
 It defines classes to access files and file system. 
 
-<h4 class="section-heading">The Path</h4>
-
+<h4 class="section-heading">Path</h4>
 The Path is a programmatic representation of a path in the file system separated by a specific separator. 
 Path might have `root`. Root is file store hierarchical starting point. It representation is `/` in Unix. 
 Windows might have multiply roots, and usually it has `C:\` root.
 You can easily create a `Path` by using using `get` methods from the `Files` class. 
-
-```java
+{% highlight java %}
  Path p1 = Paths.get("/tmp/");
  // Path to the Root
  Path p2 = Paths.get("/");
- 
+
  Path p3 = Paths.get("C:\\Windows");
  Path p4 = Paths.get("C:", "Windows");
  // p3 and p4 are identical
-````
+{% endhighlight %}
 
 Path might be represented as URI: 
-```java
- Path uriPath = Paths.get(URI.create("file:///Users"));
-````
+{% highlight java %}
+    Path uriPath = Paths.get(URI.create("file:///Users"));
+{% endhighlight %}
 
 The longest version for the following code:
-```java
- // FileSystems.getDefault() - returns default file system
- Path path = FileSystems.getDefault().getPath("/tmp/");
-````
+
+{% highlight java %}
+    // FileSystems.getDefault() - returns default file system
+    Path path = FileSystems.getDefault().getPath("/tmp/");
+{% endhighlight %}
 
 All previous examples start from the root. Basically all of them might represent an `absolute path` (path in the file system).
 Path interface has 2 methods to convert relative path to the 'absolute path'. <a href="#reference">Reference.<a/>
@@ -48,13 +47,13 @@ Path interface has 2 methods to convert relative path to the 'absolute path'. <a
  Returns an absolute path represent the real path of the file located by this object. 
  Options indicating how symbolic links are handled
 
-```java
-  // FileSystems.getDefault() - returns default file system
-  Path path = Paths.get("usr");
-  path.toAbsolutePath();
+{% highlight java %}
+    // FileSystems.getDefault() - returns default file system
+    Path path = Paths.get("usr");
+    path.toAbsolutePath();
   
-  // on the unix output might be '/usr'
-````
+    // on the unix output might be '/usr'
+{% endhighlight %}
 
 If you pass `null` into the Files.get(...)` it will throw `java.lang.NullPointerException`
 
@@ -65,7 +64,7 @@ New API introduces new `Files` class. It contains many convenient methods to wor
 If you have a very small file you can read it into the `byte[]` or `String` you can use the 
 readAllBytes(Path) or readAllLines(Path, Charset) method.
 
-```java
+{% highlight java %}
     @Test
     public void crudNioFilesAPI() throws IOException {
         // "user.dir" - User working directory
@@ -94,7 +93,8 @@ readAllBytes(Path) or readAllLines(Path, Charset) method.
 
         assertTrue(deleted);
     }
-````
+    
+{% endhighlight %}
 
 The following example demonstrates only a tip of iceberg. 
 
@@ -102,7 +102,7 @@ The following example demonstrates only a tip of iceberg.
 The Files class has a number of method to support capabilities between Legacy I/0 and NIO.
 it provides methods with signature `Files.new....`, For example `Files.newBufferedWriter`, Files.newBufferedReader.
 
-```java
+{% highlight java %}
     @Test
     public void crudLegacyFilesAPI() throws IOException {
         // "user.dir" - User working directory
@@ -137,7 +137,8 @@ it provides methods with signature `Files.new....`, For example `Files.newBuffer
 
         assertTrue(deleted);
     }
-````
+    
+{% endhighlight %}
 
 The `Path` has method `toPath()` to convert file to path at the same time `File` 
 contains a similar method `toPath()` to support `Path`. 
