@@ -639,6 +639,93 @@ function setDocumentScrollTop(ypos)
 
 </head>
 <body class="markdown-body">
-{&quot;message&quot;:&quot;API rate limit exceeded for 168.159.213.202. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)&quot;,&quot;documentation_url&quot;:&quot;https://developer.github.com/v3/#rate-limiting&quot;}
+<hr /> 
+<p>layout: post title: &quot;Files I/O NIO Way&quot; subtitle: &quot;New efficient API to work with file system and files&quot; date: 2015-04-23 03:32:10 author: &quot;Silence of Ninja&quot; tags : [java, core, files, io, nio]</p> 
+<h2> <a id="user-content-header-img-imgpost-bg-03jpg" class="anchor" href="#header-img-imgpost-bg-03jpg" aria-hidden="true"><span class="octicon octicon-link"></span></a>header-img: &quot;img/post-bg-03.jpg&quot;</h2> 
+<p>Since Java 7 a bit dusty <code>I/O</code> becomes a burden and new package <code>java.nio.file</code> has been introduced in the language. It defines classes to access files and file system. </p> 
+<h4> <a id="user-content-path" class="anchor" href="#path" aria-hidden="true"><span class="octicon octicon-link"></span></a>Path</h4> 
+<p>The Path is a programmatic representation of a path in the file system separated by a specific separator. Path might have <code>root</code>. Root is file store hierarchical starting point. It representation is <code>/</code> in Unix. Windows might have multiply roots, and usually it has <code>C:\</code> root. You can easily create a <code>Path</code> by using using <code>get</code> methods from the <code>Files</code> class. {% highlight java %} Path p1 = Paths.get(&quot;/tmp/&quot;); // Path to the Root Path p2 = Paths.get(&quot;/&quot;);</p> 
+<p>Path p3 = Paths.get(&quot;C:\Windows&quot;); Path p4 = Paths.get(&quot;C:&quot;, &quot;Windows&quot;); // p3 and p4 are identical {% endhighlight %}</p> 
+<p>Path might be represented as URI: {% highlight java %} Path uriPath = Paths.get(URI.create(&quot;file:///Users&quot;)); {% endhighlight %}</p> 
+<p>The longest version for the following code:</p> 
+<p>{% highlight java %} // FileSystems.getDefault() - returns default file system Path path = FileSystems.getDefault().getPath(&quot;/tmp/&quot;); {% endhighlight %}</p> 
+<p>All previous examples start from the root. Basically all of them might represent an <code>absolute path</code> (path in the file system). Path interface has 2 methods to convert relative path to the 'absolute path'. <a href="#reference">Reference.</a></p> 
+<p><code>Path toAbsolutePath()</code> - Returns a Path object representing the absolute path of this path.</p> 
+<p><code>Path toRealPath(LinkOption... options) throws IOException</code> - Returns an absolute path represent the real path of the file located by this object. Options indicating how symbolic links are handled</p> 
+<p>{% highlight java %} // FileSystems.getDefault() - returns default file system Path path = Paths.get(&quot;usr&quot;); path.toAbsolutePath();</p> 
+<pre><code>// on the unix output might be '/usr'
+</code></pre> 
+<p>{% endhighlight %}</p> 
+<p>If you pass <code>null</code> into the Files.get(...)<code>it will throw</code>java.lang.NullPointerException`</p> 
+<h4> <a id="user-content-files" class="anchor" href="#files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Files</h4> 
+<p>New API introduces new <code>Files</code> class. It contains many convenient methods to work with files. <code>Files</code> works with the <code>Path</code> data representation. Lets start look into some of them.</p> 
+<p>If you have a very small file you can read it into the <code>byte[]</code> or <code>String</code> you can use the readAllBytes(Path) or readAllLines(Path, Charset) method.</p> 
+<p>{% highlight java %} @Test public void crudNioFilesAPI() throws IOException { // &quot;user.dir&quot; - User working directory String workingDirectory = System.getProperty(&quot;user.dir&quot;); Path path = Paths.get(workingDirectory, &quot;test.txt&quot;);</p> 
+<pre><code>    // Creates file 'test.txt' in the 'user.dir'
+    Files.createFile(path);
+
+    // In the real life example it is better to use
+    // TETS_FILE_PAYLOAD.getBytes(StandardCharsets.UTF_8)
+    // You can get system encoding - System.getProperty(&quot;file.encoding&quot;);
+    byte[] data = TETS_FILE_PAYLOAD.getBytes();
+    // Writes payload to the created file
+    Files.write(path, data);
+
+    // Reads data from the file
+    byte[] readData = Files.readAllBytes(path);
+
+    String stringData = new String(readData);
+
+    assertEquals(&quot;Checks if data are the same&quot;, TETS_FILE_PAYLOAD, stringData);
+
+    // Deletes file and returns true if the file exists
+    boolean deleted = Files.deleteIfExists(path);
+
+    assertTrue(deleted);
+}
+</code></pre> 
+<p>{% endhighlight %}</p> 
+<p>The following example demonstrates only a tip of iceberg. </p> 
+<h4> <a id="user-content-legacy-file-io" class="anchor" href="#legacy-file-io" aria-hidden="true"><span class="octicon octicon-link"></span></a>Legacy File I/O</h4> 
+<p>The Files class has a number of method to support capabilities between Legacy I/0 and NIO. it provides methods with signature <code>Files.new....</code>, For example <code>Files.newBufferedWriter</code>, Files.newBufferedReader.</p> 
+<p>{% highlight java %} @Test public void crudLegacyFilesAPI() throws IOException { // &quot;user.dir&quot; - User working directory String workingDirectory = System.getProperty(&quot;user.dir&quot;); Path path = Paths.get(workingDirectory, &quot;test.txt&quot;);</p> 
+<pre><code>    // Creates file 'test.txt' in the 'user.dir'
+    Files.createFile(path);
+
+    // Writes payload to file
+    try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        bw.write(TETS_FILE_PAYLOAD);
+    } catch (IOException ioex) {
+        fail(ioex.getMessage());
+    }
+
+    // Reads data from the file
+    StringBuilder stringData = new StringBuilder();
+    try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            stringData.append(line);
+        }
+    } catch (IOException ioex) {
+        fail(ioex.getMessage());
+    }
+
+    assertEquals(&quot;Checks if data are the same&quot;, TETS_FILE_PAYLOAD, stringData.toString());
+
+    // Deletes file and returns true if the file exists
+    boolean deleted = Files.deleteIfExists(path);
+
+    assertTrue(deleted);
+}
+</code></pre> 
+<p>{% endhighlight %}</p> 
+<p>The <code>Path</code> has method <code>toPath()</code> to convert file to path at the same time <code>File</code> contains a similar method <code>toPath()</code> to support <code>Path</code>. </p> 
+<h4 id="user-content-reference"> <a id="user-content-reference" class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h4> 
+<p>Path, Absolute path, Relative path conceptions you can find on the <a href="http://en.wikipedia.org/wiki/Path_%28computing%29">wiki</a>.</p> 
+<p>The Following are useful methods of the <a href="http://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html">Files</a> class.</p> 
+<p><code>static FileTime getLastModifiedTime(Path path, LinkOption... options)</code> - Returns a file's last modified time.</p> 
+<p><code>static UserPrincipal getOwner(Path path, LinkOption... options)</code> - Returns the owner of a file.</p> 
+<p><code>static Path copy(Path source, Path target, CopyOption... options)</code> - Copy a file to a target file. </p> 
+<p>You can find more details inside <a href="http://docs.oracle.com/javase/8/docs/api/java/nio/file/package-summary.html">package javadoc</a>.</p>
 </body>
 </html>
