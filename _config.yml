@@ -18,4 +18,5 @@ exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 
 # blog silenceofninja
 # localhost is localconfiguration
-disqus_name: localhost
+#disqus_name: localhost
+disqus_name: silenceofninja
