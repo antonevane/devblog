@@ -28,14 +28,14 @@ You can easily create a `Path` by using using `get` methods from the `Files` cla
 
 Path might be represented as URI: 
 {% highlight java %}
-    Path uriPath = Paths.get(URI.create("file:///Users"));
+Path uriPath = Paths.get(URI.create("file:///Users"));
 {% endhighlight %}
 
 The longest version for the following code:
 
 {% highlight java %}
-    // FileSystems.getDefault() - returns default file system
-    Path path = FileSystems.getDefault().getPath("/tmp/");
+// FileSystems.getDefault() - returns default file system
+Path path = FileSystems.getDefault().getPath("/tmp/");
 {% endhighlight %}
 
 All previous examples start from the root. Basically all of them might represent an `absolute path` (path in the file system).
@@ -48,11 +48,11 @@ Path interface has 2 methods to convert relative path to the 'absolute path'. <a
  Options indicating how symbolic links are handled
 
 {% highlight java %}
-    // FileSystems.getDefault() - returns default file system
-    Path path = Paths.get("usr");
-    path.toAbsolutePath();
+// FileSystems.getDefault() - returns default file system
+Path path = Paths.get("usr");
+path.toAbsolutePath();
   
-    // on the unix output might be '/usr'
+// the unix output might look like '/usr'
 {% endhighlight %}
 
 If you pass `null` into the Files.get(...)` it will throw `java.lang.NullPointerException`
@@ -65,35 +65,34 @@ If you have a very small file you can read it into the `byte[]` or `String` you 
 readAllBytes(Path) or readAllLines(Path, Charset) method.
 
 {% highlight java %}
-    @Test
-    public void crudNioFilesAPI() throws IOException {
-        // "user.dir" - User working directory
-        String workingDirectory = System.getProperty("user.dir");
-        Path path = Paths.get(workingDirectory, "test.txt");
+@Test
+public void crudNioFilesAPI() throws IOException {
+    // "user.dir" - User working directory
+    String workingDirectory = System.getProperty("user.dir");
+    Path path = Paths.get(workingDirectory, "test.txt");
 
-        // Creates file 'test.txt' in the 'user.dir'
-        Files.createFile(path);
+    // Creates file 'test.txt' in the 'user.dir'
+    Files.createFile(path);
 
-        // In the real life example it is better to use
-        // TETS_FILE_PAYLOAD.getBytes(StandardCharsets.UTF_8)
-        // You can get system encoding - System.getProperty("file.encoding");
-        byte[] data = TETS_FILE_PAYLOAD.getBytes();
-        // Writes payload to the created file
-        Files.write(path, data);
+    // In the real life example it is better to use
+    // TETS_FILE_PAYLOAD.getBytes(StandardCharsets.UTF_8)
+    // You can get system encoding - System.getProperty("file.encoding");
+    byte[] data = TETS_FILE_PAYLOAD.getBytes();
+    // Writes payload to the created file
+    Files.write(path, data);
 
-        // Reads data from the file
-        byte[] readData = Files.readAllBytes(path);
+    // Reads data from the file
+    byte[] readData = Files.readAllBytes(path);
 
-        String stringData = new String(readData);
+    String stringData = new String(readData);
 
-        assertEquals("Checks if data are the same", TETS_FILE_PAYLOAD, stringData);
+    assertEquals("Checks if data are the same", TETS_FILE_PAYLOAD, stringData);
 
-        // Deletes file and returns true if the file exists
-        boolean deleted = Files.deleteIfExists(path);
+    // Deletes file and returns true if the file exists
+    boolean deleted = Files.deleteIfExists(path);
 
-        assertTrue(deleted);
-    }
-    
+    assertTrue(deleted);
+}   
 {% endhighlight %}
 
 The following example demonstrates only a tip of iceberg. 
@@ -103,41 +102,40 @@ The Files class has a number of method to support capabilities between Legacy I/
 it provides methods with signature `Files.new....`, For example `Files.newBufferedWriter`, Files.newBufferedReader.
 
 {% highlight java %}
-    @Test
-    public void crudLegacyFilesAPI() throws IOException {
-        // "user.dir" - User working directory
-        String workingDirectory = System.getProperty("user.dir");
-        Path path = Paths.get(workingDirectory, "test.txt");
+@Test
+public void crudLegacyFilesAPI() throws IOException {
+    // "user.dir" - User working directory
+    String workingDirectory = System.getProperty("user.dir");
+    Path path = Paths.get(workingDirectory, "test.txt");
 
-        // Creates file 'test.txt' in the 'user.dir'
-        Files.createFile(path);
+    // Creates file 'test.txt' in the 'user.dir'
+    Files.createFile(path);
 
-        // Writes payload to file
-        try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-            bw.write(TETS_FILE_PAYLOAD);
-        } catch (IOException ioex) {
-            fail(ioex.getMessage());
-        }
-
-        // Reads data from the file
-        StringBuilder stringData = new StringBuilder();
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                stringData.append(line);
-            }
-        } catch (IOException ioex) {
-            fail(ioex.getMessage());
-        }
-
-        assertEquals("Checks if data are the same", TETS_FILE_PAYLOAD, stringData.toString());
-
-        // Deletes file and returns true if the file exists
-        boolean deleted = Files.deleteIfExists(path);
-
-        assertTrue(deleted);
+    // Writes payload to file
+    try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        bw.write(TETS_FILE_PAYLOAD);
+    } catch (IOException ioex) {
+        fail(ioex.getMessage());
     }
-    
+
+    // Reads data from the file
+    StringBuilder stringData = new StringBuilder();
+    try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            stringData.append(line);
+        }
+    } catch (IOException ioex) {
+        fail(ioex.getMessage());
+    }
+
+    assertEquals("Checks if data are the same", TETS_FILE_PAYLOAD, stringData.toString());
+
+    // Deletes file and returns true if the file exists
+    boolean deleted = Files.deleteIfExists(path);
+
+    assertTrue(deleted);
+}    
 {% endhighlight %}
 
 The `Path` has method `toPath()` to convert file to path at the same time `File` 
