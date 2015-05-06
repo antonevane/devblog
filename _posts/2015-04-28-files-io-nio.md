@@ -13,7 +13,7 @@ It defines classes to access files and file system.
 
 <h4 class="section-heading">Path</h4>
 The Path is a programmatic representation of a path in the file system separated by a specific separator. 
-Path might have `root`. Root is file store hierarchical starting point. It representation is `/` in Unix. 
+Path might have `root`. Root is file store hierarchical starting point. It representation is `/` in a Unix. 
 Windows might have multiply roots, and usually it has `C:\` root.
 You can easily create a `Path` by using using `get` methods from the `Files` class. 
 {% highlight java %}
