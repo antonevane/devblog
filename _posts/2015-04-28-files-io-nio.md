@@ -9,7 +9,7 @@ header-img: "img/post-bg-03.jpg"
 ---
 
 Since Java 7 a bit dusty `I/O` becomes a burden and new package `java.nio.file` has been introduced in the language. 
-It defines classes to access files and file system. 
+It defines classes to access files and file system. Lets have a look into some of them.
 
 <h4 class="section-heading">Path</h4>
 The Path is a programmatic representation of a path in the file system separated by a specific separator. 
@@ -55,14 +55,14 @@ path.toAbsolutePath();
 // the unix output might look like '/usr'
 {% endhighlight %}
 
-If you pass `null` into the Files.get(...)` it will throw `java.lang.NullPointerException`
+If you pass `null` into the `Files.get(...)` it will throw `java.lang.NullPointerException`
 
 <h4 class="section-heading">Files</h4>
 New API introduces new `Files` class. It contains many convenient methods to work with files. `Files`
  works with the `Path` data representation. Lets start look into some of them.
 
 If you have a very small file you can read it into the `byte[]` or `String` you can use the 
-readAllBytes(Path) or readAllLines(Path, Charset) method.
+`readAllBytes(Path)` or `readAllLines(Path, Charset)` methods.
 
 {% highlight java %}
 @Test
@@ -99,7 +99,7 @@ The following example demonstrates only a tip of iceberg.
 
 <h4 class="section-heading">Legacy File I/O</h4>
 The Files class has a number of method to support capabilities between Legacy I/0 and NIO.
-it provides methods with signature `Files.new....`, For example `Files.newBufferedWriter`, Files.newBufferedReader.
+it provides methods with signature `Files.new....`, For example `Files.newBufferedWriter`, `Files.newBufferedReader`.
 
 {% highlight java %}
 @Test

@@ -1057,6 +1057,6 @@ jQuery(document).ready(function($) {
     }
 });
 
-function ($) {
+(function ($) {
 	$(document).anchor()
-	}(jQuery);
+	}(jQuery));
