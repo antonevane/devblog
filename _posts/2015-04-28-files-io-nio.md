@@ -3,11 +3,11 @@ layout:     post
 title:      "Files I/O NIO Way"
 subtitle:   "New efficient API to work with file system and files"
 date:       2015-04-23 03:32:10
-author:     "Silence of Ninja"
+author:     "Anton Novopashin"
 tags : [java, core, files, io, nio]
 header-img: "img/post-bg-03.jpg"
 ---
-
+<h3 class="section-heading">Files I/O NIO Way</h3>
 Since Java 7 a bit dusty `I/O` becomes a burden and new package `java.nio.file` has been introduced in the language. 
 It defines classes to access files and file system. Lets have a look into some of them.
 
