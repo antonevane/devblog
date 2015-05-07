@@ -3,7 +3,7 @@ title: Silence of Ninja
 header-img: img/home-bg.jpg
 email: antonevane@gmail.com
 description: "Write your site description here. It will be used as your sites meta description as well!"
-baseurl: "/devblog"
+baseurl: ""
 url: "http://silenceof.ninja"
 twitter_username: anton_evane
 github_username:  antonevane
