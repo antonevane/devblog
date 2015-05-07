@@ -5,6 +5,9 @@ subtitle:   "New efficient API to work with file system and files"
 date:       2015-04-23 03:32:10
 author:     "Silence of Ninja"
 tags : [nio, java, core, files, io]
+permalink: short-urls-jekyll
+an: http://joshualande.com/short-urls-jekyll/
+blog: http://joshualande.com/jekyll-github-pages-poole/
 header-img: "img/post-bg-03.jpg"
 ---
 
