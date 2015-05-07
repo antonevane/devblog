@@ -20,3 +20,5 @@ exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
 # localhost is localconfiguration
 #disqus_name: localhost
 disqus_name: silenceofninja
+gems:
+  - jekyll-sitemap
